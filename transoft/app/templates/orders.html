@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Documente{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Documente</h2>
+
+    <div class="d-flex flex-wrap mb-3 justify-content-between">
+      <div class="mb-1">
+        <a href="{{ url_for('orders_routes.add_order') }}" class="btn btn-primary">Adaugă proformă</a>
+        <a href="{{ url_for('orders_routes.add_invoice') }}" class="btn btn-primary ml-2">Adaugă factură</a>
+      </div>
+      <div class="mb-1">
+        <a href="{{ url_for('upload_routes.upload_file') }}" class="btn btn-primary">Încarcă fișier</a>
+      </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('orders_routes.orders') }}" class="mb-2">
+        <div class="input-group">
+            <input type="text" name="search" value="{{ search }}" placeholder="Caută după referință sau camion" class="form-control">
+            <button class="btn btn-primary ml-1" type="submit">Caută</button>
+            <a href="{{ url_for('orders_routes.orders') }}" class="btn btn-secondary ml-1">Resetează</a>
+        </div>
+    </form>
+
+
+    {% if orders %}
+    <div class="d-flex justify-content-center">
+        <div class="table-responsive-phone">
+            <table class="table">
+                <thead class="thead-dark text-center align-middle">
+                    <tr>
+                        <th>Dată Proformă</th>
+                        <th>Referință</th>
+                        <th>Camion</th>
+                        <th>Trailer</th>
+                        <th>Sumă</th>
+                        <th>Plecare</th>
+                        <th>Sosire</th>
+                        <th>Distanță</th>
+                        <th>Nr. Factură</th>
+                        <th>Dată Factură</th>
+                        <th>Sumă Factură</th>
+                        <th>Status</th>
+                        <th>Modifică</th>
+                        <th>Șterge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr class="text-center align-middle {{ order.row_class }}">
+                        <td>{{ order.order_date.strftime('%d.%m.%Y') if order.order_date else 'N/A' }}</td>
+                        <td>{{ order.position }}</td>
+                        <td>{{ order.vehicle }}</td>
+                        <td>{{ order.trailer }}</td>
+                        <td>{{ order.amount }} €</td>
+                        <td>{{ order.departure }}</td>
+                        <td>{{ order.arrival }}</td>
+                        <td>{{ order.distance }} KM</td>
+                        <td>{{ order.invoice_no }}</td>
+                        <td>{{ order.invoice_date.strftime('%d.%m.%Y') if order.invoice_date else 'N/A' }}</td>
+                        <td>{{ order.freight_value }} €</td>
+                        <td>{{ order.status }}</td>
+                        <td>
+                            <a href="{{ url_for('orders_routes.edit_order', order_id=order._id) }}" class="btn btn-primary">Modifică</a>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('orders_routes.delete_order', order_id=order._id) }}" style="display:inline;" onsubmit="return confirm('Ești sigur că vrei să ștergi documentul?');">
+                                <button type="submit" class="btn btn-danger">Șterge</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Nu ai comenzi sau facturi înregistrate. Încearcă să adaugi date!</p>
+        {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

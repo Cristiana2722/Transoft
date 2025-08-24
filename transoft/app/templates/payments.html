@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Plăți{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Plăți</h2>
+
+    <div class="d-flex mb-3">
+        <a href="{{ url_for('payments_routes.add_payment') }}" class="btn btn-primary">Adaugă plată</a>
+    </div>
+
+    {% if payments %}
+    <div class="table-responsive-phone">
+        <table class="table">
+            <thead class="thead-dark text-center align-middle">
+                <tr>
+                    <th>Tip Plată</th>
+                    <th>Descriere</th>
+                    <th>Suma</th>
+                    <th>Data Emiterii</th>
+                    <th>Data Scadentă</th>
+                    <th>Zile Rămase</th>
+                    <th>Status</th>
+                    <th>Modifică status</th>
+                    <th>Modifică</th>
+                    <th>Șterge</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr class="text-center align-middle {{ payment.row_class }}">
+                    <td>{{ payment.payment_type }}</td>
+                    <td>{{ payment.description }}</td>
+                    <td>{{ payment.amount }} €</td>
+                    <td>{{ payment.issue_date.strftime('%d %b %Y') if payment.issue_date else 'N/A' }}</td>
+                    <td>{{ payment.due_date.strftime('%d %b %Y') if payment.due_date else 'N/A' }}</td>
+                    <td>{{ payment.days_left }}</td>
+                    <td>{{ 'Plătit' if payment.paid else 'De plătit' }}</td>
+                    <td>
+                        <a href="{{ url_for('payments_routes.toggle_payment_status', payment_id=payment._id) }}"
+                           class="btn btn-warning btn-status"
+                           onclick="return confirm('Ești sigur că vrei să schimbi statusul plății?');">
+                           Schimbă status
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('payments_routes.edit_payment', payment_id=payment._id) }}" class="btn btn-primary">Modifică</a>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('payments_routes.delete_payment', payment_id=payment._id) }}" style="display:inline;" onsubmit="return confirm('Ești sigur că vrei să ștergi plata?');">
+                            <button type="submit" class="btn btn-danger">Șterge</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Nu ai plăți de efectuat. Încearcă să adaugi date!</p>
+    {% endif %}
+</div>
+{% endblock %}

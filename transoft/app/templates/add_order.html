@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Adaugă Comandă{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Adaugă o comandă</h2>
+
+    <form method="POST" action="{{ url_for('orders_routes.add_order') }}" class="mb-3">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.order_date.label(class="form-label") }}
+            {{ form.order_date(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.position.label(class="form-label") }}
+            {{ form.position(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.vehicle.label(class="form-label") }}
+            {{ form.vehicle(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.trailer.label(class="form-label") }}
+            {{ form.trailer(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.amount.label(class="form-label") }}
+            {{ form.amount(class="form-control", step="0.01", min="0") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.departure.label(class="form-label") }}
+            {{ form.departure(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.arrival.label(class="form-label") }}
+            {{ form.arrival(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.distance.label(class="form-label") }}
+            {{ form.distance(class="form-control", step="0.01", min="0") }}
+        </div>
+
+        {{ form.submit(class="btn btn-success") }}
+        <a href="{{ url_for('orders_routes.orders') }}" class="btn btn-secondary ml-2 cancel-btn">Anulează</a>
+    </form>
+</div>
+{% endblock %}

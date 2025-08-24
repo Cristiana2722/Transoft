@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Bună, {{ user.username | capitalize }}!</h2>
+    <p>Bine ai venit pe <b><i>Transoft</i></b>!</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Plăți lunare (EUR)</h5>
+                    <div class="chart-container">
+                        <canvas id="paymentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Încasări lunare (EUR)</h5>
+                    <div class="chart-container">
+                        <canvas id="receivingsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chart-container {
+    height: 220px;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const months = [
+        'Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie',
+        'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'
+    ];
+
+    const currentMonthIndex = new Date().getMonth();
+
+    const receivingsData = {{ receivings_per_month | tojson }};
+    const paymentsData = {{ payments_per_month | tojson }};
+
+    const receivingsColors = months.map((_, i) =>
+        i === currentMonthIndex ? 'rgba(75, 192, 192, 0.8)' : 'rgba(54, 162, 235, 0.5)'
+    );
+
+    const paymentsColors = months.map((_, i) =>
+        i === currentMonthIndex ? 'rgba(255, 99, 132, 0.8)' : 'rgba(255, 159, 64, 0.5)'
+    );
+
+    new Chart(document.getElementById('receivingsChart'), {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Încasări (EUR)',
+                data: receivingsData,
+                backgroundColor: receivingsColors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('paymentsChart'), {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Plăți (EUR)',
+                data: paymentsData,
+                backgroundColor: paymentsColors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+{% endblock %}

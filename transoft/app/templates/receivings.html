@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Încasări{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Încasări</h2>
+
+    <div class="d-flex mb-3">
+        <a href="{{ url_for('receivings_routes.add_receiving') }}" class="btn btn-primary">Adaugă încasare</a>
+    </div>
+
+
+    {% if receivings %}
+    <div class="table-responsive-phone">
+        <table class="table">
+            <thead class="thead-dark text-center align-middle">
+                <tr>
+                    <th>Tip Încasare</th>
+                    <th>Descriere</th>
+                    <th>Suma</th>
+                    <th>Data Emiterii</th>
+                    <th>Data Scadentă</th>
+                    <th>Zile Rămase</th>
+                    <th>Status</th>
+                    <th>Modifică status</th>
+                    <th>Modifică</th>
+                    <th>Șterge</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for receiving in receivings %}
+                <tr class="text-center align-middle {{ receiving.row_class }}">
+                    <td>{{ receiving.receiving_type }}</td>
+                    <td>{{ receiving.description }}</td>
+                    <td>{{ receiving.amount }} €</td>
+                    <td>{{ receiving.issue_date.strftime('%d %b %Y') if receiving.issue_date else 'N/A' }}</td>
+                    <td>{{ receiving.due_date.strftime('%d %b %Y') if receiving.due_date else 'N/A' }}</td>
+                    <td>{{ receiving.days_left }}</td>
+                    <td>{{ 'Încasat' if receiving.received else 'De încasat' }}</td>
+                    <td>
+                        <a href="{{ url_for('receivings_routes.toggle_receiving_status', receiving_id=receiving._id) }}"
+                           class="btn btn-warning btn-status"
+                           onclick="return confirm('Ești sigur că vrei să schimbi statusul încasării?');">
+                           Schimbă status
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('receivings_routes.edit_receiving', receiving_id=receiving._id) }}" class="btn btn-primary">Modifică</a>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('receivings_routes.delete_receiving', receiving_id=receiving._id) }}" style="display:inline;" onsubmit="return confirm('Ești sigur că vrei să ștergi încasarea?');">
+                            <button type="submit" class="btn btn-danger">Șterge</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Nu ai sume de încasat. Încearcă să adaugi date!</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Încarcă Fișier{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Încarcă fișier</h2>
+
+    <form method="POST" action="{{ url_for('upload_routes.upload_file') }}" enctype="multipart/form-data" class="mb-4">
+        <div class="form-group">
+            <label for="pdf_file">Alege fișier PDF</label>
+            <input type="file" name="pdf_file" id="pdf_file" accept="application/pdf" required class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Tip fișier:</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="doc_type" id="order" value="order" required
+                    {% if doc_type == 'order' %}checked{% endif %}>
+                <label class="form-check-label" for="order">Proformă</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="doc_type" id="invoice" value="invoice" required
+                    {% if doc_type == 'invoice' %}checked{% endif %}>
+                <label class="form-check-label" for="invoice">Factură</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Încarcă</button>
+        <a href="{{ url_for('orders_routes.orders') }}" class="btn btn-secondary ml-2 cancel-btn">Anulează</a>
+    </form>
+
+    {% if doc_type == 'order' and forms_order %}
+        <h3>Proforme detectate</h3>
+        <form method="POST" action="{{ url_for('upload_routes.upload_order') }}">
+            {{ forms_order[0].csrf_token }}
+            <input type="hidden" name="order_count" value="{{ forms_order|length }}">
+            <div class="row">
+                {% for form in forms_order %}
+                <div class="col-md-4" style="margin-bottom: 0;">
+                    <div class="border rounded p-3 mb-0">
+                        {{ form.hidden_tag() }}
+
+                        <div class="form-group mb-1">
+                            {{ form.order_date.label(class="form-label") }}
+                            {{ form.order_date(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.position.label(class="form-label") }}
+                            {{ form.position(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.vehicle.label(class="form-label") }}
+                            {{ form.vehicle(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.trailer.label(class="form-label") }}
+                            {{ form.trailer(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.amount.label(class="form-label") }}
+                            {{ form.amount(class="form-control", step="0.01", min="0") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.departure.label(class="form-label") }}
+                            {{ form.departure(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.arrival.label(class="form-label") }}
+                            {{ form.arrival(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-0">
+                            {{ form.distance.label(class="form-label") }}
+                            {{ form.distance(class="form-control", step="0.01", min="0") }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 mb-4">Salvează proformele</button>
+        </form>
+
+    {% elif doc_type == 'invoice' and forms_invoice %}
+        <h3>Factură detectată</h3>
+        <form method="POST" action="{{ url_for('upload_routes.upload_invoice') }}">
+            {{ forms_invoice[0].csrf_token }}
+            <div class="row">
+                {% for form in forms_invoice %}
+                <div class="col-md-4" style="margin-bottom: 0;">
+                    <div class="border rounded p-3 mb-0">
+                        {{ form.hidden_tag() }}
+
+                        <div class="form-group mb-1">
+                            {{ form.position.label(class="form-label") }}
+                            {{ form.position(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.invoice_no.label(class="form-label") }}
+                            {{ form.invoice_no(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-1">
+                            {{ form.invoice_date.label(class="form-label") }}
+                            {{ form.invoice_date(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-0">
+                            {{ form.freight_value.label(class="form-label") }}
+                            {{ form.freight_value(class="form-control", step="0.01", min="0") }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 mb-4">Salvează factura</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

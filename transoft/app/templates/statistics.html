@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2 class="mb-3">Upload File</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="custom-file mb-3">
+            <input type="file" class="custom-file-input" id="file" name="file" required>
+            <label class="custom-file-label" for="file">Choose file...</label>
+            <div class="invalid-feedback">Please select a file to upload.</div>
+        </div>
+        <input type="hidden" name="file_id" value="{{ file_id }}">
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+</div>
+
+<script>
+  document.getElementById('file').addEventListener('change', function(e) {
+    var fileName = e.target.files[0]?.name || "Choose file...";
+    var label = e.target.nextElementSibling;
+    label.textContent = fileName;
+  });
+</script>
+{% endblock %}

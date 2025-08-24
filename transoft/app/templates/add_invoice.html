@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Adaugă Factură{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Adaugă o factură</h2>
+
+    <form method="POST" action="{{ url_for('orders_routes.add_invoice') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.position.label(class="form-label") }}
+            {{ form.position(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.invoice_no.label(class="form-label") }}
+            {{ form.invoice_no(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.invoice_date.label(class="form-label") }}
+            {{ form.invoice_date(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.freight_value.label(class="form-label") }}
+            {{ form.freight_value(class="form-control", step="0.01", min="0") }}
+        </div>
+
+        {{ form.submit(class="btn btn-success") }}
+        <a href="{{ url_for('orders_routes.orders') }}" class="btn btn-secondary ml-2 cancel-btn">Anulează</a>
+    </form>
+</div>
+{% endblock %}

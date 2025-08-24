@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Account</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(class="form-control", value=user.username) }}
+        </div>
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control", value=user.email) }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-control-label") }}
+            {{ form.password(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.password_check.label(class="form-control-label") }}
+            {{ form.password_check(class="form-control") }}
+        </div>
+        <div>
+            <a href="{{ url_for('user_routes.edit_account') }}" class="btn btn-primary mb-2" style="width: 150px;">Edit Account</a>
+            <a href="{{ url_for('user_routes.change_password') }}" class="btn btn-primary mb-2" style="width: 150px;">Change Password</a>
+        </div>
+        <button type="submit" class="btn btn-danger" style="width: 150px;" onclick="return confirm('Are you sure you want to delete account?');">Delete Account</button>
+    </form>
+</div>
+{% endblock %}

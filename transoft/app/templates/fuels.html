@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Alimentări{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Alimentări</h2>
+
+    <div class="d-flex mb-3">
+        <a href="{{ url_for('fuels_routes.add_fuel') }}" class="btn btn-primary">Adaugă alimentare</a>
+    </div>
+
+    <form method="GET" action="{{ url_for('fuels_routes.fuels') }}" class="mb-2">
+        <div class="input-group">
+            <input type="text" name="plate_number" value="{{ search_plate }}" placeholder="Caută după număr înmatriculare" class="form-control">
+            <button class="btn btn-primary ml-1" type="submit">Caută</button>
+            <a href="{{ url_for('fuels_routes.fuels') }}" class="btn btn-secondary ml-1">Resetează</a>
+        </div>
+    </form>
+
+    {% if fuels %}
+    <div class="table-responsive-phone">
+        <table class="table">
+            <thead class="thead-dark text-center align-middle">
+                <tr>
+                    <th>Număr Înmatriculare</th>
+                    <th>Dată Alimentare</th>
+                    <th>Km</th>
+                    <th>Litri Diesel</th>
+                    <th>Litri AdBlue</th>
+                    <th>Distanță</th>
+                    <th>Consum Diesel</th>
+                    <th>Consum AdBlue</th>
+                    <th>Modifică</th>
+                    <th>Șterge</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fuel in fuels %}
+                <tr class="text-center align-middle">
+                    <td>{{ fuel.plate_number }}</td>
+                    <td>{{ fuel.fuel_date.strftime('%d.%m.%Y') if fuel.fuel_date else 'N/A' }}</td>
+                    <td>{{ fuel.km }}</td>
+                    <td>{{ fuel.diesel }}</td>
+                    <td>{{ fuel.adblue }}</td>
+                    <td>{{ fuel.distance }}</td>
+                    <td>{{ fuel.diesel_consumption }}</td>
+                    <td>{{ fuel.adblue_consumption }}</td>
+                    <td>
+                        <a href="{{ url_for('fuels_routes.edit_fuel', fuel_id=fuel._id) }}" class="btn btn-primary">Modifică</a>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('fuels_routes.delete_fuel', fuel_id=fuel._id) }}" style="display:inline;" onsubmit="return confirm('Ești sigur că vrei să ștergi alimentarea?');">
+                            <button type="submit" class="btn btn-danger">Șterge</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Nu ai alimentări înregistrate. Încearcă să adaugi date!</p>
+    {% endif %}
+</div>
+{% endblock %}

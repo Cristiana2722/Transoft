@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Modifică Alimentare{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Modifică alimentare</h2>
+
+    <form method="POST" action="{{ url_for('fuels_routes.edit_fuel', fuel_id=fuel._id) }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.plate_number.label(class="form-label") }}
+            {{ form.plate_number(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.fuel_date.label(class="form-label") }}
+            {{ form.fuel_date(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.km.label(class="form-label") }}
+            {{ form.km(class="form-control", min="0") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.diesel.label(class="form-label") }}
+            {{ form.diesel(class="form-control", step="0.01", min="0") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.adblue.label(class="form-label") }}
+            {{ form.adblue(class="form-control", step="0.01", min="0") }}
+        </div>
+
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('fuels_routes.fuels') }}" class="btn btn-secondary ml-2 cancel-btn">Anulează</a>
+    </form>
+</div>
+{% endblock %}
