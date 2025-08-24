@@ -12,11 +12,12 @@ from transoft.app.upload_routes import upload_routes_blueprint
 from flask import Flask
 from transoft.app.extensions import mongo
 import os
-
+from dotenv import load_dotenv
 
 def create_app():
+    load_dotenv()
     app = Flask(__name__)
-    app.config["MONGO_URI"] = "mongodb+srv://transoft:NFGsy1kBPuEBQq64@transoft.k2p4nhe.mongodb.net/transoft"
+    app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
     app.config['SECRET_KEY'] = 'mysecretkey777'
     app.config['UPLOAD_FOLDER'] = 'uploads'
